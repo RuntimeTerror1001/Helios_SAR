@@ -24,7 +24,9 @@ def generate_launch_description():
         '--reqtype', 'ignition.msgs.EntityFactory',
         '--reptype', 'ignition.msgs.Boolean',
         '--timeout', '3000',
-        '--req', f'sdf_filename: "{model_path}"'
+        '--req', (f'sdf_filename: "{model_path}"',
+                  'pose { position { x: 10.0, y: -10.0, z: 0.2 }, ' 
+                  'orientation { x: 0.0, y: 0.0, z: 0.7936, w: 0.6084 } }')
     ]
     
     spawn_survivor_cmd = [
@@ -67,14 +69,14 @@ def generate_launch_description():
             ]
         ),
 
-        # Delay and then spawn Survivor_Male
-        TimerAction(
-            period=6.0,  # Spawn slightly later to ensure separation
-            actions=[
-                ExecuteProcess(
-                    cmd=spawn_survivor_cmd,
-                    output='screen'
-                )
-            ]
-        ),
+        # # Delay and then spawn Survivor_Male
+        # TimerAction(
+        #     period=6.0,  # Spawn slightly later to ensure separation
+        #     actions=[
+        #         ExecuteProcess(
+        #             cmd=spawn_survivor_cmd,
+        #             output='screen'
+        #         )
+        #     ]
+        # ),
     ])

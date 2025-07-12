@@ -186,6 +186,10 @@
                         <mean>0.00000008</mean>
                     </noise>
                 </air_pressure>
+                <plugin name="ignition::gazebo::systems::AirPressure" 
+                filename="libignition-gazebo-air-pressure-system.so">
+                    <topic>/air_pressure</topic>
+                </plugin>
             </sensor>
 
             <!--Magnetometer Sensor-->

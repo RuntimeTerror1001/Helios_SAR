@@ -35,6 +35,9 @@
         <plugin filename="gz-sim-contact-system"
                 name="gz::sim::systems::Contact">
         </plugin>
+        <plugin filename="libhelios_controller.so"
+                name="helios_controller::HeliosController">
+        </plugin>
         <gui fullscreen="0">
           <!-- 3D scene -->
           <plugin filename="MinimalScene" name="3D View">
