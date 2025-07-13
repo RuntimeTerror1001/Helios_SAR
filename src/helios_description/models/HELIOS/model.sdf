@@ -193,7 +193,7 @@
             </sensor>
 
             <!--Magnetometer Sensor-->
-            <sensor name="magnetometer" type="magnetometer">
+            <!-- <sensor name="magnetometer" type="magnetometer">
                 <always_on>1</always_on>
                 <update_rate>20</update_rate>
                 <magnetometer>
@@ -216,7 +216,7 @@
                         </noise>
                     </z>
                 </magnetometer>
-            </sensor>
+            </sensor> -->
             
             <!--Front Camera Sensor-->
             <visual name="camera_visual">
@@ -230,7 +230,7 @@
             <sensor name="camera_front" type="rgbd_camera">
                 <pose>0.192 -0.015 -0.023 0 0.174533 0</pose>
                 <always_on>1</always_on>
-                <update_rate>20</update_rate>
+                <update_rate>10</update_rate> <!-- was 20 -->
                 <camera name="camera_front">
                     <horizontal_fov>2.0944</horizontal_fov>
                     <lens>
@@ -251,8 +251,8 @@
                         <center>0.5 0.5</center>
                     </distortion>
                     <image>
-                        <width>1440</width>
-                        <height>1080</height>
+                        <width>640</width> <!-- was 1440 -->
+                        <height>480</height> <!-- was 1080 -->
                         <format>R8G8B8</format>
                     </image>
                     <clip>
@@ -268,7 +268,7 @@
             </sensor>
 
             <!-- Thermal Camera Sensor -->
-            <visual name="thermal_camera_visual">
+            <!-- <visual name="thermal_camera_visual">
               <pose>0.192 0.015 -0.023 0 0.174533 0</pose>
               <geometry>
                 <box>
@@ -281,14 +281,14 @@
               <camera name="thermal_camera">
                 <horizontal_fov>1.5708</horizontal_fov>
                 <lens>
-                  <intrinsics>
-                    <!-- fx = fy = width / ( 2 * tan (hfov / 2 ) ) -->
-                    <fx>320.0</fx>
-                    <fy>320.0</fy>
-                    <!-- cx = ( width + 1 ) / 2 -->
-                    <cx>320.5</cx>
-                    <!-- cy = ( height + 1 ) / 2 -->
-                    <cy>256.5</cy>
+                  <intrinsics> -->
+                    <!-- COMMENT fx = fy = width / ( 2 * tan (hfov / 2 ) ) -->
+                    <!-- <fx>320.0</fx>
+                    <fy>320.0</fy> -->
+                    <!-- COMMENT cx = ( width + 1 ) / 2 -->
+                    <!-- <cx>320.5</cx> -->
+                    <!-- COMMENT cy = ( height + 1 ) / 2 -->
+                    <!-- <cy>256.5</cy>
                     <s>0</s>
                   </intrinsics>
                 </lens>
@@ -311,7 +311,7 @@
                 <max_temp>673.15</max_temp>
                 <resolution>1.6</resolution>
               </plugin>
-            </sensor>
+            </sensor> -->
 
             <!--Front Laser Sensor (LIDAR)-->
             <visual name="laser_visual">
@@ -328,17 +328,17 @@
 					We believe this is based on a Velodyne Puck Lite 
 					which weighs 590 g -->
                 <pose>0 0 0.05 0 0 0</pose>
-                <update_rate>10</update_rate>
+                <update_rate>5</update_rate> <!-- was 10-->
                 <lidar>
                     <scan>
                         <horizontal>
-                            <samples>1800</samples>
+                            <samples>300</samples> <!-- was 1800-->
                             <resolution>1</resolution>
                             <min_angle>-3.14159</min_angle>
                             <max_angle>3.14159</max_angle>
                         </horizontal>
                         <vertical>
-                            <samples>16</samples>
+                            <samples>4</samples> <!-- was 16-->
                             <resolution>1</resolution>
                             <min_angle>-0.261799</min_angle>
                             <max_angle>0.261799</max_angle>
@@ -712,7 +712,7 @@
                 <motorType>velocity</motorType>
             </plugin>
 
-            <plugin
+            <!-- <plugin
                 filename="ignition-gazebo-multicopter-control-system"
                 name="ignition::gazebo::systems::MulticopterVelocityControl">
                 <robotNamespace>helios</robotNamespace>
@@ -750,6 +750,16 @@
                     <direction>-1</direction>
                 </rotor>
                 </rotorConfiguration>
+            </plugin> -->
+
+            <plugin
+                filename="ignition-gazebo-odometry-publisher-system"
+                name="ignition::gazebo::systems::OdometryPublisher">
+               <dimensions>3</dimensions>
+               <publish_pose>true</publish_pose>
+               <publish_twist>true</publish_twist>
+               <topic>/odometry</topic>
+               <odom_publish_frequency>100</odom_publish_frequency>
             </plugin>
 
     </model>

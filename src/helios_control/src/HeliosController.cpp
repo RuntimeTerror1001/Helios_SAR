@@ -36,6 +36,13 @@ void HeliosController::Configure(
     std::cout << "[HeliosController] Configure called for entity: " << entity << std::endl;
 }
 
+void HeliosController::OdomCallback(const ignition::msgs::Odometry &_msg)
+{
+    std::lock_guard<std::mutex> lock(this->odomMutex);
+    this->latestOdomMsg = _msg;
+    this->odomReceived = true;
+}
+
 void HeliosController::ImuCallback(const ignition::msgs::IMU &_msg)
 {
     std::lock_guard<std::mutex> lock(this->imuMutex);
@@ -61,29 +68,18 @@ void HeliosController::PreUpdate(const ignition::gazebo::UpdateInfo &_info,
     }
 
     const auto simTime = _info.simTime;
-
-    if (this->heliosEntity == ignition::gazebo::kNullEntity)
-    {
-        _ecm.Each<ignition::gazebo::components::Name>(
-            [&](const ignition::gazebo::Entity &entity,
-                const ignition::gazebo::components::Name *name) -> bool
-            {
-                if (name->Data() == "helios")  
-                {
-                    this->heliosEntity = entity;
-                    ignmsg << "[HeliosController] Found Helios entity: " << entity << std::endl;
-                    return false; // stop iterating
-                }
-                return true;
-            });
-    }
-
-    if (this->heliosEntity == ignition::gazebo::kNullEntity)
-        return;
+    const auto dt = _info.dt;
 
     if(!this->motorPubInitialized){
-        this->motorPub = this->node.Advertise<ignition::msgs::Actuators>("/gazebo/command/motor_speed");
+        this->motorPub = this->node.Advertise<ignition::msgs::Actuators>("/helios/gazebo/command/motor_speed");
         this->motorPubInitialized = true;
+    }
+
+    if(!this->odomSubInitialized){
+        this->node.Subscribe("model/helios/odometry",
+                            &HeliosController::OdomCallback,
+                        this);
+        this->odomSubInitialized = true;
     }
 
     if (!this->imuSubInitialized)
@@ -102,9 +98,6 @@ void HeliosController::PreUpdate(const ignition::gazebo::UpdateInfo &_info,
         this->pressureSubInitialized = true;
     }
 
-    auto poseComp = _ecm.Component<components::Pose>(this->heliosEntity);
-    auto linVelComp = _ecm.Component<components::LinearVelocity>(this->heliosEntity);
-    auto angVelComp = _ecm.Component<components::AngularVelocity>(this->heliosEntity);
 
     const auto attitudePeriod = std::chrono::duration_cast<std::chrono::steady_clock::duration>(
         std::chrono::duration<double>(1.0 / 500.0)); //ATTITUDE_RATE=500
@@ -121,39 +114,10 @@ void HeliosController::PreUpdate(const ignition::gazebo::UpdateInfo &_info,
         HeliosIMUData imuData{};
         HeliosState state{};
 
-        // Convert data into C format
-        double poseData[10]; // x, y, z, qx, qy, qz, qw, roll, pitch, yaw
-        double velData[3];
-        double gyroData[3];
-
-        auto pose = poseComp->Data();
-        auto rot = pose.Rot().Euler();
-
-        poseData[0] = pose.Pos().X();
-        poseData[1] = pose.Pos().Y();
-        poseData[2] = pose.Pos().Z();
-
-        poseData[3] = pose.Rot().X();
-        poseData[4] = pose.Rot().Y();
-        poseData[5] = pose.Rot().Z();
-        poseData[6] = pose.Rot().W();
-
-        poseData[7] = rot.X() * 180.0 / M_PI;
-        poseData[8] = rot.Y() * 180.0 / M_PI;
-        poseData[9] = rot.Z() * 180.0 / M_PI;
-
-        auto vel = linVelComp->Data();
-        velData[0] = vel.X();
-        velData[1] = vel.Y();
-        velData[2] = vel.Z();
-
-        auto angVel = angVelComp->Data();
-        gyroData[0] = angVel.X();
-        gyroData[1] = angVel.Y();
-        gyroData[2] = angVel.Z();
-
-        // Fill C structs using helper
-        FillHeliosState(poseData, velData, &state);
+        if(this->odomReceived){
+            std::lock_guard<std::mutex> lock(this->odomMutex);
+            FillHeliosState(this->latestOdomMsg, &state);
+        }
         if (this->imuReceived)
         {
             std::lock_guard<std::mutex> lock(this->imuMutex);
@@ -166,7 +130,7 @@ void HeliosController::PreUpdate(const ignition::gazebo::UpdateInfo &_info,
         }
         GenerateTestSetpoint(&setpoint); // TODO : Fill from a ROS2 topic
 
-        HeliosPIDUpdate(&control, &setpoint, &imuData, &state, simTime);
+        HeliosPIDUpdate(&control, &setpoint, &imuData, &state, dt);
 
         //--------------------Motor Command Mixer--------------------
         std::vector<double> motorSpeeds(4,0.0);

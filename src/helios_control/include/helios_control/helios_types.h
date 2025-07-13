@@ -57,7 +57,6 @@ struct HeliosState{
     HeliosQuat orientationQuat;
     HeliosVec3 position;
     HeliosVec3 velocity;
-    HeliosVec3 acceleration;
 };
 
 struct HeliosControlOutput{
@@ -74,7 +73,6 @@ struct HeliosAirPress{
 };
 
 struct HeliosIMUData{
-    HeliosVec3 accel; // m/s^2 or Gs
     HeliosVec3 gyro; // deg/s
     HeliosAirPress airPress;
 };

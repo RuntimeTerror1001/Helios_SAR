@@ -3,8 +3,9 @@
 
 #include "helios_types.h"
 #include <ignition/msgs/imu.pb.h>
+#include <ignition/msgs/odometry.pb.h>
 
-void FillHeliosState(void *pose, void *velocity, HeliosState *state);
+void FillHeliosState(const ignition::msgs::Odometry &msg, HeliosState *state);
 
 void FillIMUData(const ignition::msgs::IMU &msg, HeliosIMUData *imu);
 

@@ -28,8 +28,8 @@ static float capAngle(float angle)
 
 void HeliosPIDInit(void)
 {
-    //attitudeControllerInit(ATTITUDE_UPDATE_DT);
-    //positionControllerInit();
+    attitudeControllerInit(1.0/500.0f);
+    positionControllerInit();
 }
 
 void HeliosPIDUpdate(HeliosControlOutput *output,

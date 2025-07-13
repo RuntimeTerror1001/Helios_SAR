@@ -188,7 +188,7 @@
           </plugin>
 
           <!-- Insert simple shapes -->
-          <plugin filename="Shapes" name="Shapes">
+          <!-- <plugin filename="Shapes" name="Shapes">
           <gz-gui>
             <property key="resizable" type="bool">false</property>
             <property key="x" type="double">0</property>
@@ -199,10 +199,10 @@
             <property key="showTitleBar" type="bool">false</property>
             <property key="cardBackground" type="string">#666666</property>
           </gz-gui>
-          </plugin>
+          </plugin> -->
 
           <!-- Insert lights -->
-          <plugin filename="Lights" name="Lights">
+          <!-- <plugin filename="Lights" name="Lights">
           <gz-gui>
             <property key="resizable" type="bool">false</property>
             <property key="x" type="double">250</property>
@@ -213,10 +213,10 @@
             <property key="showTitleBar" type="bool">false</property>
             <property key="cardBackground" type="string">#666666</property>
           </gz-gui>
-          </plugin>
+          </plugin> -->
 
           <!-- Translate / rotate -->
-          <plugin filename="TransformControl" name="Transform control">
+          <!-- <plugin filename="TransformControl" name="Transform control">
           <gz-gui>
             <property key="resizable" type="bool">false</property>
             <property key="x" type="double">0</property>
@@ -227,10 +227,10 @@
             <property key="showTitleBar" type="bool">false</property>
             <property key="cardBackground" type="string">#777777</property>
           </gz-gui>
-          </plugin>
+          </plugin> -->
 
           <!-- Screenshot -->
-          <plugin filename="Screenshot" name="Screenshot">
+          <!-- <plugin filename="Screenshot" name="Screenshot">
           <gz-gui>
             <property key="resizable" type="bool">false</property>
             <property key="x" type="double">250</property>
@@ -241,10 +241,10 @@
             <property key="showTitleBar" type="bool">false</property>
             <property key="cardBackground" type="string">#777777</property>
           </gz-gui>
-          </plugin>
+          </plugin> -->
 
           <!-- Video recorder -->
-          <plugin filename="VideoRecorder" name="VideoRecorder">
+          <!-- <plugin filename="VideoRecorder" name="VideoRecorder">
           <gz-gui>
             <property key="resizable" type="bool">false</property>
             <property key="x" type="double">300</property>
@@ -261,7 +261,7 @@
             <lockstep>false</lockstep>
             <bitrate>4000000</bitrate>
           </record_video>
-          </plugin>
+          </plugin> -->
 
           <!-- Inspector -->
           <plugin filename="ComponentInspector" name="Component inspector">
@@ -278,11 +278,11 @@
           </plugin>
 
           <!-- View angle -->
-          <plugin filename="ViewAngle" name="View angle">
+          <!-- <plugin filename="ViewAngle" name="View angle">
           <gz-gui>
             <property type="string" key="state">docked_collapsed</property>
           </gz-gui>
-          </plugin>
+          </plugin> -->
 
             <!-- KeyPublisher plugin-->
             <plugin filename="KeyPublisher" name="Key Publisher"/>
